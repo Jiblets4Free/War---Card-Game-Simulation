@@ -163,7 +163,7 @@ if __name__ == "__main__":
 
 ## PROBLEMS
 
-# Often the simulation does not end.
+# Often the simulation loops infinitely, it seems like this war will never end... :D
 # There are out of range errors if a war occurs when one player does not have enough cards to partake in one.
 
 
