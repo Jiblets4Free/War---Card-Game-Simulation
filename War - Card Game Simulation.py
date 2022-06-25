@@ -47,9 +47,15 @@ class Hand():
     def PopTopCard(self):
         return self.CardsList.pop(0)
     
+    def GetNumberOfCards(self):
+        return len(self.CardsList)
+
     def DisplayCardsList(self):
         for card in self.CardsList:
-            print(str(card[0]) + str(card[1]),end=" ")
+            if len(str(card[1])) == 1:
+                print(str(card[0]) + str(card[1]),end="  ")
+            else:
+                print(str(card[0]) + str(card[1]),end=" ")
         print()
 
 def CompleteWarTurn():
@@ -57,17 +63,45 @@ def CompleteWarTurn():
     if CardsPlayed[0][1] > CardsPlayed[1][1]:
         Hand1.AddCard(CardsPlayed[0])
         Hand1.AddCard(CardsPlayed[1])
+        print("1")
         return
     elif CardsPlayed[0][1] < CardsPlayed[1][1]:
         Hand2.AddCard(CardsPlayed[0])
         Hand2.AddCard(CardsPlayed[1])
+        print("2")
         return
     else:
+        #What if war occurs when a player doesnt have enough cards to do one?
+        print("war")
         for i in range(0,3):
             CardsPlayed.append(Hand1.PopTopCard())
             CardsPlayed.append(Hand2.PopTopCard())
-        ##NOT FINISHED
-        return
+        if CardsPlayed[-2][1] > CardsPlayed[-1][1]:
+            for Card in CardsPlayed:
+                Hand1.AddCard(Card)
+        elif CardsPlayed[-2][1] < CardsPlayed[-1][1]:
+            for Card in CardsPlayed:
+                Hand2.AddCard(Card)    
+        else:
+            if CardsPlayed[-4][1] > CardsPlayed[-3][1]:
+                for Card in CardsPlayed:
+                    Hand1.AddCard(Card)
+            elif CardsPlayed[-4][1] < CardsPlayed[-3][1]:
+                for Card in CardsPlayed:
+                    Hand2.AddCard(Card)
+            else:
+                if CardsPlayed[-6][1] > CardsPlayed[-5][1]:
+                    for Card in CardsPlayed:
+                        Hand1.AddCard(Card)
+                elif CardsPlayed[-6][1] < CardsPlayed[-5][1]:
+                    for Card in CardsPlayed:
+                        Hand2.AddCard(Card)
+                else:
+                    print("GG")
+                    for i in range(0,len(CardsPlayed)/2):
+                        Hand1.AddCard(CardsPlayed[i])
+                        Hand2.AddCard(CardsPlayed[len(CardsPlayed)-i])
+
 
 if __name__ == "__main__":
 
@@ -82,6 +116,23 @@ if __name__ == "__main__":
 
     if TheDeck.GetCardsListSize() != 0:
         print("Deck Size Error")
+
+    print("Starting Hand 1: ",end="")
+    Hand1.DisplayCardsList()
+
+    print("Starting Hand 2: ",end="")
+    Hand2.DisplayCardsList()
+
+    ## SIMULATION ##
+    while Hand1.GetNumberOfCards() > 0 and Hand2.GetNumberOfCards() > 0:
+        CompleteWarTurn()
+    
+    print("Ending Hand 1: ",end="")
+    Hand1.DisplayCardsList()
+
+    print("Ending Hand 2: ",end="")
+    Hand2.DisplayCardsList()
+    
 
 
 
