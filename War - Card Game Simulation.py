@@ -37,9 +37,9 @@ class Deck():
     #AQA wish.
     def Shuffle(self):
         TempList = []
-        for i in range(0,len(self.CardsList)):
+        while len(self.CardsList) > 1:
             TempList.append(self.CardsList.pop(randint(0,len(self.CardsList) - 1)))
-        self.CardsList = TempList
+        self.CardsList = TempList + self.CardsList
 
 class Hand():
     def __init__(self):
