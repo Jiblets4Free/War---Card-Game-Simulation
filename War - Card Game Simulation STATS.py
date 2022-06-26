@@ -119,21 +119,25 @@ def Main() -> int:
     while Play: #Recursion takes up too much memory, this is better
         round = Round(Hand1, Hand2)
         Play, Hand1, Hand2 = round.Start()
-        if Round.ID == 500:
+        print(f"Round: {Round.ID}", end="\r")
+        if Round.ID >= 500:
             break
     return Round.ID
 
 
 if __name__ == "__main__":
     number = int(input("How many games shall we simulate?: "))
-    GameLengths = []
+    GameLengths = {}
     for i in range(number):
         num = Main()
-        print(f"Game {i+1} complete")
-        GameLengths.append(num)
-    fig = px.bar(GameLengths, "Number of Rounds", "Frequency", "Red")
+        Round.ID = 0
+        try:
+            GameLengths[num] += 1
+        except:
+            GameLengths[num] = 1
+    fig = px.bar(x=GameLengths.keys(), y=GameLengths.values())
     fig.show()
 
 
 
-### PROBLEMS: None, that i can find. This game does seem to go on for ages though...
+### PROBLEMS: None, that i can find. This game does seem to go on for ages though... 
