@@ -167,9 +167,9 @@ from random import randint
 ## There are out of range errors if a war occurs when one player does not have enough cards to partake in one.
 
 
-### EDWARDS IDEAS
+### EDWARDS IDEA
 
-#I am going to attempt to do this recursively, and plan for a GUI as well. Lets do this properly ;)
+#I am going to attempt to do this recursively (ish), and plan for a GUI as well. Lets do this properly ;)
 #On top of that, I think we should work on turning this into a full game, and releasing it too.
 #I can do all the paperwork, although help with the short design documents would be appreciated
 
@@ -217,6 +217,7 @@ class Round:
         card2 = self._Hand2.pop(0)
         print(f"Player 1 played {card1}")
         print(f"Player 2 played {card2}")
+
         if card1 == card2:
             self.War(card1, card2)
         elif card1 > card2:
@@ -235,12 +236,14 @@ class Round:
         print("WAR!")    
         p1Cards = self._GetWarCards(self._Hand1)
         p2Cards = self._GetWarCards(self._Hand2)
-        print(f"Player 1 has {len(p1Cards)} card/s face down!")
-        print(f"Player 2 has {len(p2Cards)} card/s face down!")
+
+        print(f"Player 1 has {len(p1Cards)} card/s face down!") #Can differ, if one player only has
+        print(f"Player 2 has {len(p2Cards)} card/s face down!") #a few cards left
 
         discard = []
-        while card1 == card2:
-            discard += [card1, card2]
+        while card1 == card2: #This is safe to call straight away, as we know card1 is already equal to card2
+            discard += [card1, card2] #Puts the two similar cards into discard, then gets the next ones
+
             if len(p1Cards) == 0:
                 try:
                     card1 = self._Hand1.pop(0)
@@ -266,14 +269,15 @@ class Round:
             print(f"Player 1 played {card1}")
             print(f"Player 2 played {card2}")
         
+        total = len(discard) + len(p2Cards) + len(p1Cards) + 2
         if card1 > card2:
-            print(f"Player 1 has won this round and taken the {len(discard)+2} cards!")
+            print(f"Player 1 has won this round and taken the {total} cards!")
             self._Hand1 += discard + [card1, card2] + p1Cards + p2Cards
         else:
-            print(f"Player 2 has won this round and taken the {len(discard)+2} cards!")
+            print(f"Player 2 has won this round and taken the {total} cards!")
             self._Hand2 += discard + [card1, card2] + p1Cards + p2Cards
         
-    def _GetWarCards(self, Hand: list[Card]) -> list[Card]:
+    def _GetWarCards(self, Hand: list[Card]) -> list[Card]: #Just made this to avoid repetition
         cards = []
         for i in range(min(len(self._Hand1)-1, 3)): # -1 so that one card is left for comparison
             cards.append(Hand.pop(0))
@@ -281,25 +285,25 @@ class Round:
 
 def Main():
     suits = ["Hearts", "Diamonds", "Spades", "Clubs"]
-    cards = set()
+    cards = set() #Contains only unique elements, so we dont have to worry about checking if exists
     while len(cards) < 52:
         cards.add((randint(2, 14), suits[randint(0, len(suits)-1)]))
     CardList = []
     for value in cards:
-        CardList.append(Card(value[1], value[0]))
+        CardList.append(Card(value[1], value[0])) #Generate the cards
     Hand1 = CardList[:26]
     Hand2 = CardList[26:]
-    del(CardList)
+    del(CardList) #Not necessary, just gets rid of CardList as no longer needed
     print("Setup finished")
-    input("Ready? :)")
+    input("Ready? :)") #Press enter to begin, pretty much
     Play = True
-    while Play:
+    while Play: #Recursion takes up too much memory, this is better
         Play, Hand1, Hand2 = Round(Hand1, Hand2).Start()
-        if input(":") == "":
+        if input(":") == "": #Breaks between rounds, press enter to continue
             continue
         else:
             break
-    if len(Hand1) == 0:
+    if len(Hand1) == 0: #If the game has ended, check who won
         print("Player 2 has won the game!")
     else:
         print("Player 1 has won the game!")
@@ -307,3 +311,5 @@ def Main():
 
 if __name__ == "__main__":
     Main()
+
+### PROBLEMS: None, that i can find. This game does seem to go on for ages though...
