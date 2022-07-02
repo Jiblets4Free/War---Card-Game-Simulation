@@ -119,8 +119,7 @@ def Main() -> int:
     while Play: #Recursion takes up too much memory, this is better
         round = Round(Hand1, Hand2)
         Play, Hand1, Hand2 = round.Start()
-        print(f"Round: {Round.ID}", end="\r")
-        if Round.ID >= 500:
+        if Round.ID >= 100000:
             break
     return Round.ID
 

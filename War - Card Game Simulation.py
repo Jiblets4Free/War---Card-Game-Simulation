@@ -1,181 +1,158 @@
-from random import randint
+import random
+import fontTools
+import pygame as pg
+from os import path
+import sys
+import screeninfo
 
-##Suits = ["Clubs","Diamonds","Spades","Hearts"]
-#Suits = ["C","D","S","H"]
-#
-##Values = ["Ace","2","3","4","5","6","7","8","9","10","Jack","Queen","King"]
-#Values = [1,2,3,4,5,6,7,8,9,10,11,12,13]
-#
-##Perhaps Deck and Hand should both inherit from a super class as they have a lot in common.
-#class Deck():
-#    def __init__(self):
-#        self.CardsList = []
-#        self.FillDeck()
-#
-#    #A nicer print statement.
-#    def DisplayCardsList(self):
-#        for card in self.CardsList:
-#            print(str(card[0]) + str(card[1]),end=" ")
-#        print()
-#    
-#    #This fills the deck entirely in order.
-#    def FillDeck(self):
-#        self.CardsList = []
-#        for Suit in Suits:
-#            for Val in Values:
-#                self.CardsList.append([Suit,Val])
-#
-#    def GetCardsListSize(self):
-#        return len(self.CardsList)
-#
-#    def GetCardsList(self):
-#        return self.CardsList
-#
-#    def PopCard(self,pos):
-#        return self.CardsList.pop(pos)
-#
-#    #AQA wish.
-#    def Shuffle(self):
-#        TempList = []
-#        while len(self.CardsList) > 1:
-#            TempList.append(self.CardsList.pop(randint(0,len(self.CardsList) - 1)))
-#        self.CardsList = TempList + self.CardsList
-#
-#class Hand():
-#    def __init__(self):
-#        self.CardsList = []
-#    
-#    #Adds to the back of the List
-#    def AddCard(self,Card):
-#        self.CardsList.append(Card)
-#    
-#    def PopTopCard(self):
-#        return self.CardsList.pop(0)
-#    
-#    def GetNumberOfCards(self):
-#        return len(self.CardsList)
-#
-#    # Made so that "12" takes up the same space as "1 " by adding spaces for a more clear print.
-#    def DisplayCardsList(self):
-#        for card in self.CardsList:
-#            if len(str(card[1])) == 1:
-#                print(str(card[0]) + str(card[1]),end="  ")
-#            else:
-#                print(str(card[0]) + str(card[1]),end=" ")
-#
-#
-### This simulates one turn.
-#def CompleteWarTurn():
-#    CardsPlayed = [Hand1.PopTopCard(),Hand2.PopTopCard()]
-#    if CardsPlayed[0][1] > CardsPlayed[1][1]:
-#        Hand1.AddCard(CardsPlayed[0])
-#        Hand1.AddCard(CardsPlayed[1])
-#        #print("1")
-#
-#    elif CardsPlayed[0][1] < CardsPlayed[1][1]:
-#        Hand2.AddCard(CardsPlayed[0])
-#        Hand2.AddCard(CardsPlayed[1])
-#        #print("2")
-#
-#    else:
-#
-#        #What if war occurs when a player doesnt have enough cards to do one?
-#        #print("war")
-#        for i in range(0,3):
-#            CardsPlayed.append(Hand1.PopTopCard())
-#            CardsPlayed.append(Hand2.PopTopCard())
-#
-#        if CardsPlayed[-2][1] > CardsPlayed[-1][1]:
-#            for Card in CardsPlayed:
-#                Hand1.AddCard(Card)
-#
-#        elif CardsPlayed[-2][1] < CardsPlayed[-1][1]:
-#            for Card in CardsPlayed:
-#                Hand2.AddCard(Card)   
-#
-#        else:
-#            if CardsPlayed[-4][1] > CardsPlayed[-3][1]:
-#                for Card in CardsPlayed:
-#                    Hand1.AddCard(Card)
-#
-#            elif CardsPlayed[-4][1] < CardsPlayed[-3][1]:
-#                for Card in CardsPlayed:
-#                    Hand2.AddCard(Card)
-#
-#            else:
-#                if CardsPlayed[-6][1] > CardsPlayed[-5][1]:
-#                    for Card in CardsPlayed:
-#                        Hand1.AddCard(Card)
-#
-#                elif CardsPlayed[-6][1] < CardsPlayed[-5][1]:
-#                    for Card in CardsPlayed:
-#                        Hand2.AddCard(Card)
-#
-#                else:
-#                    print("GG")
-#                    ## If they drew on all cards, split the played cards and give each hand half.
-#                    for i in range(0,len(CardsPlayed)/2):
-#                        Hand1.AddCard(CardsPlayed[i])
-#                        Hand2.AddCard(CardsPlayed[len(CardsPlayed)-i])
-#
-#
-#if __name__ == "__main__":
-#
-#    TheDeck = Deck()
-#    TheDeck.Shuffle()
-#    Hand1 = Hand()
-#    Hand2 = Hand()
-#
-#    ## Splits the deck evenly into the two hands.
-#    for i in range(0,TheDeck.GetCardsListSize()//2):
-#        Hand1.AddCard(TheDeck.PopCard(0))
-#        Hand2.AddCard(TheDeck.PopCard(TheDeck.GetCardsListSize()-1))
-#
-#    if TheDeck.GetCardsListSize() != 0:
-#        print("Deck Size Error")
-#
-#    #Pre simulation Data
-#    print("Starting Hand 1: ",end="")
-#    Hand1.DisplayCardsList()
-#    print("  Size: ",end="")
-#    print(Hand1.GetNumberOfCards())
-#
-#    print("Starting Hand 2: ",end="")
-#    Hand2.DisplayCardsList()
-#    print("  Size: ",end="")
-#    print(Hand2.GetNumberOfCards())
-#
-#    ## SIMULATION ##
-#    while Hand1.GetNumberOfCards() > 0 and Hand2.GetNumberOfCards() > 0:
-#        CompleteWarTurn()
-#    
-#    #Post simluation Data
-#    print("\nEnding Hand 1: ",end="")
-#    Hand1.DisplayCardsList()
-#    print("  Size: ",end="")
-#    print(Hand1.GetNumberOfCards())
-#
-#    print("Ending Hand 2: ",end="")
-#    Hand2.DisplayCardsList()
-#    print("  Size: ",end="")
-#    print(Hand2.GetNumberOfCards())
-#    
-#
-### PROBLEMS
-#
-## Often the simulation loops infinitely, it seems like this war will never end... :D
-## There are out of range errors if a war occurs when one player does not have enough cards to partake in one.
+COLOURS = {
+    "White": "#FFFFFF",
+    "Black": "#000000",
+    "Dark Green": "#164900",
+    "Green": "#2E6E12",
+    "Light Green": "#4E9231",
+    "Pale Green": "#77B75B",
+    "Very Pale Green": "#A8DB92"
+    }
 
+def resource_path(relative_path):
+    "Gets the path for the resource relative to the base folder. Allows for assets to work within an executable"
+    try:
+        base_path = sys._MEIPASS
+    except:
+        base_path = path.abspath(".")
 
-### EDWARDS IDEA
+    return path.join(base_path, relative_path)
 
-#I am going to attempt to do this recursively (ish), and plan for a GUI as well. Lets do this properly ;)
-#On top of that, I think we should work on turning this into a full game, and releasing it too.
-#I can do all the paperwork, although help with the short design documents would be appreciated
+class SpriteSheet:
+    def __init__(self, FileName: str, HorNumSprites: int, VertNumSprites: int):
+        self._Image = pg.image.load(resource_path(FileName)).convert_alpha()
+        Right = self._Image.get_size()[0] / HorNumSprites
+        Down = self._Image.get_size()[1] / VertNumSprites
+        self._Images = [[[]]*HorNumSprites]*VertNumSprites #type: list[list[list[pg.Surface]]]
+        x, y = 0, 0
+        print(self._Images)
+        for i in range(HorNumSprites*VertNumSprites):
+            self._Images[y][x] = pg.Surface((Right, Down)).convert_alpha()
+            self._Images[y][x].blit(self._Image, (0, 0), (0, 0, x*Right, y*Down))
+            x += 1
+            if x >= HorNumSprites:
+                y += 1
+                x = 0
+    
+    def GetImage(self, PosRight: int, PosDown: int) -> pg.Surface:
+        return self._Images[PosDown][PosRight]
+
+class Image(pg.sprite.Sprite):
+
+    def __init__(self, FilePath: str, border: bool, size=None, borderSize=2, borderColour="Black"):
+        self.image = pg.image.load(resource_path(FilePath)).convert_alpha()
+        if size:
+            self.image = pg.transform.scale(self.image, size).convert_alpha()
+        if border:
+            pg.draw.rect(self.image, COLOURS[borderColour], )
+
+class Rectangle(pg.sprite.Sprite):
+
+    def __init__(self, colour: str, size: tuple[int, int], groups: list[pg.sprite.Group], pos: tuple, border: bool, borderSize=2, borderColour="Black"):
+        super().__init__(groups)
+        self.rect.center = pos
+        self.rect.size = size
+        self.image = pg.Surface(size)
+        self._Border = border
+        self._Colour = colour
+        self._size = size
+        self._BorderSize = borderSize
+        self._BorderColour = borderColour
+        if border:
+            self.image.fill(borderColour)
+            temp = pg.Surface((size[0]-(2*borderSize), size[1]-(2*borderSize))).fill(COLOURS[colour])
+            self.image.blit(temp, (borderSize, borderSize))
+        else:
+            self.image.fill(COLOURS[colour])
+    
+    def GetSize(self) -> tuple:
+        return self._size
+
+class TextBox(Rectangle):
+
+    def __init__(self, text: str, font: pg.font.Font, size: tuple, border: bool, pos: tuple, colour="White", textColour="Black", borderSize=2, borderColour="Black", groups: list[pg.sprite.Group]=[]):
+        super().__init__(colour, size, groups, pos, border, borderSize, borderColour)
+        self._Text = text
+        self._TextColour = textColour
+        self._Font = font
+        self._RenderedText = font.render(text, True, textColour)
+        self._Text_x = (size[0] / 2) - (self._RenderedText.get_rect().size[0]/2)
+        self._Text_y = (size[1] / 2) - (self._RenderedText.get_rect().size[1]/2)
+    
+    def _DrawText(self):
+        self.image.blit(self._RenderedText, (self._Text_x, self._Text_y))
+
+class ScrollingTextBox(TextBox):
+
+    def __init__(self, text: str, font: pg.font.Font, size: tuple, border: bool, pos: tuple, colour="White", textColour="Black", borderSize=2, borderColour="Black", groups: list[pg.sprite.Group] = []):
+        super().__init__(text, font, size, border, pos, colour, textColour, borderSize, borderColour, groups)
+        self._CurrentText = ""
+        self._CurrentIndex = 1
+        self._ScrollSpeed = 5
+        self._Counter = 0
+
+    def update(self):
+        if self._CurrentIndex > len(self._CurrentText):
+            return
+        self._Counter += 1
+        if self._Counter % 5 == 0:
+            self._CurrentText = self._Text[:self._CurrentIndex]
+            self._CurrentIndex += 1
+            if self._Border:
+                self.image.fill(self._BorderColour)
+                temp = pg.Surface((self._size[0]-(2*self._BorderSize), self._size[1]-(2*self._BorderSize))).fill(COLOURS[self._Colour])
+                self.image.blit(temp, (self._BorderSize, self._BorderSize))
+            else:
+                self.image.fill(COLOURS[self._Colour])
+            self.image.blit(self._Font.render(self._CurrentText, True, self._TextColour), (self._Text_x, self._Text_y))
+
+class Button(TextBox):
+    ID = 0
+    def __init__(self, text: str, font: pg.font.Font, size: tuple, border: bool, colour: str, highlightColour: str, pos: tuple, borderSize=2, borderColour="Black", groups: list[pg.sprite.Group]=[]):
+        self._ID = Button.ID
+        Button.ID += 1
+        super().__init__(text, font, size, groups, border, pos, colour, borderSize, borderColour)
+        self._DrawText()
+        self._Highlighted = False
+        self._HighlightColour = highlightColour
+    
+    def Get_ID(self) -> int:
+        return self._ID
+    
+    def Highlight(self):
+        self._Highlighted = True
+    
+    def update(self):
+        if self._Highlighted:
+            colour = self._HighlightColour
+        else:
+            colour = self._Colour
+        if self._Border:
+            self.image.fill(self._BorderColour)
+            temp = pg.Surface((self._size[0]-(2*self._BorderSize), self._size[1]-(2*self._BorderSize))).fill(COLOURS[colour])
+            self.image.blit(temp, (self._BorderSize, self._BorderSize))
+        else:
+            self.image.fill(COLOURS[colour])
+        self._DrawText()
+
 
 class Card:
     def __init__(self, suit: str, value: int):
         self._Suit = suit
+        if self._Suit == "Hearts":
+            suitValue = 0
+        elif self._Suit == "Diamonds":
+            suitValue = 1
+        elif self._Suit == "Clubs":
+            suitValue = 2
+        elif self._Suit == "Spades":
+            suitValue = 3
         self._NumericValue = value #This value is used for comparison
         if self._NumericValue == 11:
             self._CardValue = "Jack"
@@ -187,6 +164,12 @@ class Card:
             self._CardValue = "Ace"
         else:
             self._CardValue = str(self._NumericValue)
+        self._Flipped = False
+        self._Flipping = True
+        if self._NumericValue == 14:
+            self._FlippedImage = SPRITESHEET.GetImage(0, suitValue)
+        else:
+            self._FlippedImage = SPRITESHEET.GetImage(self._NumericValue -1, suitValue)
     
     def GetNumericValue(self) -> int: #Used for comparison
         return self._NumericValue
@@ -272,10 +255,10 @@ class Round:
         total = len(discard) + len(p2Cards) + len(p1Cards) + 2
         if card1 > card2:
             print(f"Player 1 has won this round and taken the {total} cards!")
-            self._Hand1 += discard + [card1, card2] + p1Cards + p2Cards
+            self._Hand1 += random.shuffle(discard + [card1, card2] + p1Cards + p2Cards) #Shuffled to make the game finite
         else:
             print(f"Player 2 has won this round and taken the {total} cards!")
-            self._Hand2 += discard + [card1, card2] + p1Cards + p2Cards
+            self._Hand2 += random.shuffle(discard + [card1, card2] + p1Cards + p2Cards)
         
     def _GetWarCards(self, Hand: list[Card]) -> list[Card]: #Just made this to avoid repetition
         cards = []
@@ -283,33 +266,125 @@ class Round:
             cards.append(Hand.pop(0))
         return cards
 
+class Game:
+
+    def __init__(self):
+        suits = ["Hearts", "Diamonds", "Spades", "Clubs"]
+        cards = set() #Contains only unique elements, so we dont have to worry about checking if exists
+        while len(cards) < 52:
+            cards.add((random.randint(2, 14), suits[random.randint(0, len(suits)-1)]))
+        CardList = []
+        for value in cards:
+            CardList.append(Card(value[1], value[0])) #Generate the cards
+        self._Hand1 = CardList[:26]
+        self._Hand2 = CardList[26:]
+
+    def PlayGame(self):
+        Play = True
+        while Play: #Recursion takes up too much memory, this is better
+            Play, Hand1, Hand2 = Round(Hand1, Hand2).Start()
+
+    def _DrawMenu(self):
+        pass
+
+class MainMenu:
+
+    def __init__(self, PlayedBefore: bool, HighestScore: str, FastestWin: str, GamesPlayed: str):
+        self._BackgroundImage = pg.transform.scale(pg.image.load(resource_path("WAR.png")), SCREENSIZE)
+        self._HighestScore = HighestScore
+        self._FastestWin = FastestWin
+        self._GamesPlayed = GamesPlayed
+        self._ButtonActions = {
+            0: self._PlayGame,
+            1: self._Exit,
+        }
+        self._ButtonGroup = pg.sprite.Group()
+        self._StatsGroup = pg.sprite.Group()
+        text = f"Highest Score: {HighestScore} \n Fastest Win: {FastestWin} \n, Total Games Played: {GamesPlayed}"
+        Textbox = TextBox(text, FONTS[1], (200, 100), True, (SCREENSIZE[0]-200, 0), "Green", "Pale Green", 2, "Black", self._StatsGroup)
+        Button1 = Button("Play Game", FONTS[0], (100, 50), True, "Dark Green", "Light Green", (SCREENSIZE[0]/2, SCREENSIZE[1]/2), 2, "Black", self._ButtonGroup)
+        Button2 = Button("Exit", FONTS[0], (100, 50), True, "Dark Green", "Light Green", ((SCREENSIZE[0]/2)-200, SCREENSIZE[1]/2), 2, "Black", self._ButtonGroup)
+
+    def _PlayGame(self):
+        return self._HighestScore, self._FastestWin, True
+
+    def _Exit(self):
+        return self._HighestScore, self._FastestWin, False
+    
+    def Run(self) -> tuple[str, str, bool]:
+        while True:
+            SCREEN.fill(COLOURS["Black"])
+            SCREEN.blit(self._BackgroundImage, (0, 0))
+            self._ButtonGroup.update()
+            self._StatsGroup.update()
+            self._ButtonGroup.draw(SCREEN)
+            self._StatsGroup.draw(SCREEN)
+            mousePos = pg.mouse.get_pos()
+            button = GetPointCollisions(mousePos, self._ButtonGroup)
+            if button is not None:
+                button.Highlight()
+            for event in pg.event.get():
+                if event.type == pg.MOUSEBUTTONDOWN:
+                    if button is not None:
+                        self._ButtonActions[button.Get_ID()]()
+                elif event.type == pg.KEYDOWN:
+                    if event.key == pg.K_ESCAPE:
+                        return self._Exit()
+                    
+
+def GetPointCollisions(point: tuple[int, int], SpriteGroup: pg.sprite.Group) -> pg.sprite.Sprite | None:
+    for sprite in SpriteGroup:
+        if sprite.rect.collidepoint(point[0], point[1]):
+            return sprite
+
 def Main():
-    suits = ["Hearts", "Diamonds", "Spades", "Clubs"]
-    cards = set() #Contains only unique elements, so we dont have to worry about checking if exists
-    while len(cards) < 52:
-        cards.add((randint(2, 14), suits[randint(0, len(suits)-1)]))
-    CardList = []
-    for value in cards:
-        CardList.append(Card(value[1], value[0])) #Generate the cards
-    Hand1 = CardList[:26]
-    Hand2 = CardList[26:]
-    del(CardList) #Not necessary, just gets rid of CardList as no longer needed
-    print("Setup finished")
-    input("Ready? :)") #Press enter to begin, pretty much
-    Play = True
-    while Play: #Recursion takes up too much memory, this is better
-        Play, Hand1, Hand2 = Round(Hand1, Hand2).Start()
-        if input(":") == "": #Breaks between rounds, press enter to continue
-            continue
-        else:
+    pg.init()
+
+    global PRIMARY_MONITOR
+    MONITORS = screeninfo.get_monitors()
+    PRIMARY_MONITOR = None
+    for monitor in MONITORS:
+        if monitor.is_primary:
+            PRIMARY_MONITOR = monitor 
+            global SCREENSIZE
+            SCREENSIZE = (PRIMARY_MONITOR.width, PRIMARY_MONITOR.height)
             break
-    if len(Hand1) == 0: #If the game has ended, check who won
-        print("Player 2 has won the game!")
-    else:
-        print("Player 1 has won the game!")
+
+    global SCREEN
+    SCREEN = pg.display.set_mode((PRIMARY_MONITOR.width, PRIMARY_MONITOR.height))
+    pg.display.set_caption("WAR", "WAR")
+
+    global SPRITESHEET
+    SPRITESHEET = SpriteSheet("cards.png", 13, 5)
+
+    pg.display.set_icon(SPRITESHEET.GetImage(0, 4))
+
+    global GAME
+    GAME = Game()
+
+    global FONTS 
+    FONTS = []
+    for i in range(1, 5):
+        FONTS.append(pg.font.Font(resource_path("Abel-Regular.ttf"), i*8))
+
+    PlayedBefore = False
+    try:
+        with open("save.SAVE", "w+") as f:
+            info = f.readlines()
+            HighestScore = info[0]
+            FastestWin = info[1]
+            PlayedBefore = True
+    except FileNotFoundError:
+        with open(resource_path("save.SAVE"), "w") as f:
+            f.writelines(["0", "0"])
+            HighestScore = "0"
+            FastestWin = "Never" 
+
+    playing = True
+    while playing:
+        MAINMENU = MainMenu(PlayedBefore, HighestScore, FastestWin)
+        playing, HighestScore, FastestWin = MAINMENU.Run()
 
 
 if __name__ == "__main__":
     Main()
-
-### PROBLEMS: None, that i can find. This game does seem to go on for ages though...
